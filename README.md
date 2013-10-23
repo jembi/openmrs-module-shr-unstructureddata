@@ -1,4 +1,4 @@
-=SHR Unstructured Data Module=
+#SHR Unstructured Data Module
 
 This module provides a framework for adding data stores for unstructured data to OpenMRS. 
 
