@@ -53,10 +53,17 @@
 			
 
 			<!-- Begin OpenMRS core -->
-			
 			<dependency>
 				<groupId>org.openmrs.api</groupId>
 				<artifactId>openmrs-api</artifactId>
+				<version>${openMRSVersion}</version>
+				<type>jar</type>
+				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.openmrs.web</groupId>
+				<artifactId>openmrs-web</artifactId>
 				<version>${openMRSVersion}</version>
 				<type>jar</type>
 				<scope>provided</scope>
@@ -70,7 +77,36 @@
 				<scope>test</scope>
 			</dependency>
 			
+			<dependency>
+				<groupId>org.openmrs.web</groupId>
+				<artifactId>openmrs-web</artifactId>
+				<version>${openMRSVersion}</version>
+				<type>test-jar</type>
+				<scope>test</scope>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.openmrs.test</groupId>
+				<artifactId>openmrs-test</artifactId>
+				<version>${openMRSVersion}</version>
+				<type>pom</type>
+				<scope>test</scope>
+			</dependency>
 			<!-- End OpenMRS core -->
+      
+     		<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-crypto</artifactId>
+				<version>3.1.4.RELEASE</version>
+			</dependency>
+            
+      		<dependency>
+            	<groupId>org.openmrs.module</groupId>
+            	<artifactId>shr-contenthandler</artifactId>
+            	<version>1.0</version>
+            	<type>jar</type>
+            	<scope>provided</scope>
+        	</dependency>
 
 		</dependencies>
 	</dependencyManagement>
