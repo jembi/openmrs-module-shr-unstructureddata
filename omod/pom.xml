@@ -37,24 +37,49 @@
 
 		<!-- Begin OpenMRS core -->
 
-		<dependency>
-			<groupId>org.openmrs.api</groupId>
-			<artifactId>openmrs-api</artifactId>
-			<type>jar</type>
-		</dependency>
-
-		
-		<dependency>
-			<groupId>org.openmrs.api</groupId>
-			<artifactId>openmrs-api</artifactId>
-			<type>test-jar</type>
-			<scope>test</scope>
-		</dependency>
-
+	  <dependency>
+        <groupId>org.openmrs.api</groupId>
+        <artifactId>openmrs-api</artifactId>
+        <version>1.9.0</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.openmrs.web</groupId>
+        <artifactId>openmrs-web</artifactId>
+        <version>1.9.0</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.openmrs.api</groupId>
+        <artifactId>openmrs-api</artifactId>
+        <version>1.9.0</version>
+        <type>test-jar</type>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.openmrs.web</groupId>
+        <artifactId>openmrs-web</artifactId>
+        <version>1.9.0</version>
+        <type>test-jar</type>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.openmrs.test</groupId>
+        <artifactId>openmrs-test</artifactId>
+        <version>1.9.0</version>
+        <type>pom</type>
+        <scope>test</scope>
+      </dependency>
 
 		
 		<!-- End OpenMRS core -->
 
+	  <dependency>
+    	<groupId>org.openmrs.module</groupId>
+    	<artifactId>shr-contenthandler-api</artifactId>
+    	<version>1.0.0-RC</version>
+	  </dependency>
+	  
 	</dependencies>
 
 	<build>
