@@ -16,6 +16,8 @@ import org.openmrs.module.shr.contenthandler.api.Content;
 public class BaseXUnstructuredDAOImplTest {
 	public static final Log log = LogFactory.getLog(RiakUnstructuredDAOImpl.class);
 
+	//commented out tests as they are dependent on BaseX being installed. 
+	
 /*	@Test
 	public void test() {
 		BaseXUnstructuredDAOImpl baseXDAO = new BaseXUnstructuredDAOImpl();
