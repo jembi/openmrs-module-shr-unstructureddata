@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 
@@ -43,21 +44,14 @@ public class BaseXUnstructuredDAOImpl implements UnstructuredDAO {
 		loadBaseXConfig();
 		
 		try {
-			URL url = new URL("http://" + host + ":" + port + "/BaseX772" + "/rest/" + database + "/" + key + ".xml");
-			log.error(url);
+			URL url = new URL("http://" + host + ":" + port + "/BaseX772" + "/rest/" + database + "/" + key + ".xml?chop=false");
+
 			if (!content.getContentType().contains("XML")){
 				log.info("Non-XML type" + content.getContentType() + " can't be saved by the BaseX handler" );
 				return false;
 			}
 			// Establish the connection to the URL. 
-		    HttpURLConnection conn = (HttpURLConnection) url.openConnection(); 
-		    
-		    String encoded = Base64.encode(username + ":" + password);
-		    log.error(encoded);
-		    conn.setRequestMethod("PUT");
-		    conn.setRequestProperty("Authorization", "Basic " + encoded);
-		    conn.setRequestProperty("Content-Type", "application/xml");
-		    conn.setDoOutput(true);
+		    HttpURLConnection conn = openConnection(url, "PUT", username, password);
 
 		    OutputStream out = new BufferedOutputStream(conn.getOutputStream());
 		    InputStream in = new ByteArrayInputStream(content.getPayload().getBytes());
@@ -68,18 +62,19 @@ public class BaseXUnstructuredDAOImpl implements UnstructuredDAO {
 
 		    log.error("\n* HTTP response: " + conn.getResponseCode() +
 			        " (" + conn.getResponseMessage() + ')');
+		    
 		    if (conn.getResponseCode() == 201){
 		    	conn.disconnect();
-		    	return true;
+		    	return true;			//resource created
 		    }
 		
 		
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;				//error
 		}
 		
-		return false;
+		return false;					//resource not created
 	}
 
 	@Override
@@ -87,51 +82,67 @@ public class BaseXUnstructuredDAOImpl implements UnstructuredDAO {
 		
 		String payload = "";
 		loadBaseXConfig();
-		try {
-			URL url = new URL("http://" + host + ":" + port + "/BaseX772" +"/rest/" + database + "/" + key + ".xml");
+		
+		try{
+			URL	url = new URL("http://" + host + ":" + port + "/BaseX772" +"/rest/" + database + "/" + key + ".xml");
 
 			// Establish the connection to the URL. 
-		    HttpURLConnection conn = (HttpURLConnection) url.openConnection(); 
-		    String encoded = Base64.encode(username + ":" + password);
-		    conn.setRequestMethod("GET");
-		    conn.setRequestProperty("Authorization", "Basic " + encoded);
-		    
-		    // Print the HTTP response code
+			HttpURLConnection conn = openConnection(url, "GET", username, password);
+		    /* Print the HTTP response code
 		    int code = conn.getResponseCode();
+			
 		    log.info("\n* HTTP response: " + code +
-		        " (" + conn.getResponseMessage() + ')');
-
+		       " (" + conn.getResponseMessage() + ')');
+			*/
+			
 		    // Check if request was successful
-		    if(code == HttpURLConnection.HTTP_OK) {
-		      // Print the received result to standard output
-		      System.out.println("\n* Result:");
+		    if(conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
 
-		      // Get and cache input as UTF-8 encoded stream
-		      BufferedReader br = new BufferedReader(new InputStreamReader(
-		          conn.getInputStream(), "UTF-8"));
+		    	// Get and cache input as UTF-8 encoded stream
+		    	BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 		      
-		      payload = IOUtils.toString(br);
+		    	payload = IOUtils.toString(br);
 
-		      br.close();
-		     // log.error(payload);
-		    }
+		    	br.close();
 		    
-		    conn.disconnect();
-		    Content content = new Content(payload, false, "formatCode", "text/XML", "UTF-8", Content.Representation.TXT, null, null);
-		
-		    return content;
+		      conn.disconnect();
+		    
+		    }
 		    
 		} catch (Exception e){
 			e.printStackTrace();
-			return null;
+			return null;		//error
 		}
+		    
+		Content content = new Content(payload, false, "formatCode", "text/XML", "UTF-8", Content.Representation.TXT, null, null);
 		
+		return content;		
 	}
 
 	@Override
 	public Boolean purgeContent(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		loadBaseXConfig();
+		
+		try{
+			URL url = new URL("http://" + host + ":" + port + "/BaseX772" + "/rest/" + database + "/" + key + ".xml");
+	
+		    HttpURLConnection conn = openConnection(url, "DELETE", username, password);
+		    
+		    if(conn.getResponseCode() == HttpURLConnection.HTTP_OK) { 		//resource deleted
+		    	conn.disconnect();
+		    	return true;
+		    } 
+		    
+		    conn.disconnect();												//resource not found
+		    return false;
+		    
+		} catch (Exception e){												//error
+			e.printStackTrace();
+			return null;
+		}
+	
+	
 	}
 
 	public void loadBaseXConfig(){
@@ -163,5 +174,25 @@ public class BaseXUnstructuredDAOImpl implements UnstructuredDAO {
 		}
 		
 		
+	}
+	
+	public HttpURLConnection openConnection(URL url, String requestMethod, String username, String password){
+		try {
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection(); 
+	    	String encoded = Base64.encode(username + ":" + password);
+	    	conn.setRequestMethod(requestMethod);
+	    	conn.setRequestProperty("Authorization", "Basic " + encoded);
+	    	
+	    	if (requestMethod=="PUT" || requestMethod=="POST"){
+	    		conn.setRequestProperty("Content-Type", "application/xml");
+	    		conn.setDoOutput(true);
+	    	}
+	    	
+		    return conn;		    
+		} catch (Exception e){
+			e.printStackTrace();
+			return null;
+		}
+
 	}
 }
