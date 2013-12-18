@@ -1,12 +1,13 @@
 package org.openmrs.module.shr.unstructureddata.dao;
 
+import org.openmrs.module.shr.contenthandler.api.Content;
 
 public interface UnstructuredDAO {
 	
-    Boolean saveObject(String key, Object value);
+    Boolean saveContent(String key, Content content);
     
-    Object getObject(String key);
+    Content getContent(String key);
     
-    Boolean purgeObject(String key);
+    Boolean purgeContent(String key);
 
 }

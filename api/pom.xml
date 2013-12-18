@@ -42,11 +42,41 @@
 			<scope>test</scope>
 		</dependency>
 		
+		<dependency>
+        	<groupId>org.openmrs.test</groupId>
+        	<artifactId>openmrs-test</artifactId>
+        	<type>pom</type>
+        	<scope>test</scope>
+        </dependency>
 		
-				
+
 		<!-- End OpenMRS core -->
+		<dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>shr-contenthandler-api</artifactId>
+        </dependency>		
+
+		<dependency>
+			<groupId>com.basho.riak</groupId>
+			<artifactId>riak-client</artifactId>
+		</dependency>	
+        
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
 		
-	</dependencies>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+		</dependency>
+				
+		<dependency>
+  			<groupId>org.basex</groupId>
+ 			<artifactId>basex</artifactId>
+ 		</dependency>
+ 		
+		</dependencies>
 	
 	<build>
 		<resources>

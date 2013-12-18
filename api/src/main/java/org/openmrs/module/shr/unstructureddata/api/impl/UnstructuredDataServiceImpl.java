@@ -22,7 +22,6 @@ public class UnstructuredDataServiceImpl implements UnstructuredDataService {
 	@Override
 	public void onStartup() {
 		setDefaultDAO(new RiakUnstructuredDAOImpl());
-
 	}
 
 	@Override
@@ -34,21 +33,30 @@ public class UnstructuredDataServiceImpl implements UnstructuredDataService {
 	}
 
 	@Override
-	public void RegisterUnstructuredDAO(String contentType,
-			UnstructuredDAO prototype) throws AlreadyRegisteredException {
-		this.daoMap.put(contentType, prototype);
+	public void registerUnstructuredDAO(String contentType,
+			UnstructuredDAO dao) throws AlreadyRegisteredException, NullPointerException {
+		
+		if (contentType == null || dao == null){
+			throw new NullPointerException();
+		}
+		else if (this.daoMap.containsKey(contentType)) {
+			throw new AlreadyRegisteredException();
+		}
+		else{
+			this.daoMap.put(contentType, dao);
+		}
+	}
+
+	@Override
+	public void deregisterUnstructuredDAO(String contentType) {
+		
+		this.daoMap.remove(contentType);
 
 	}
 
 	@Override
-	public void DeregisterUnstructuredDAO(String contentType) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setDefaultDAO(UnstructuredDAO prototype) {
-		this.defaultDAO = prototype;
+	public void setDefaultDAO(UnstructuredDAO dao) {
+		this.defaultDAO = dao;
 	}
 
 	@Override

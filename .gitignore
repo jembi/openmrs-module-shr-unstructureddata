@@ -1,7 +1,11 @@
 api/target
 omod/target
 .settings/
+.classpath
+.project
 api/.settings/
+omod/.settings/
 api/target/
 omod/target/
 *.iml
+.*
